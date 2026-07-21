@@ -6,6 +6,7 @@ const nocache = require("nocache");
 const { messagesRouter } = require("./messages/messages.router");
 const { errorHandler } = require("./middleware/error.middleware");
 const { notFoundHandler } = require("./middleware/not-found.middleware");
+const { ordersRouter } = require("./orders.router");
 
 dotenv.config();
 
@@ -51,7 +52,7 @@ app.use(nocache());
 app.use(
   cors({
     origin: CLIENT_ORIGIN_URL,
-    methods: ["GET"],
+    methods: ["GET", "POST"],
     allowedHeaders: ["Authorization", "Content-Type"],
     maxAge: 86400,
   })
@@ -59,6 +60,10 @@ app.use(
 
 app.use("/api", apiRouter);
 apiRouter.use("/messages", messagesRouter);
+apiRouter.use("/orders", ordersRouter);
+
+console.log("errorHandler:", errorHandler);
+console.log("notFoundHandler:", notFoundHandler);
 
 app.use(errorHandler);
 app.use(notFoundHandler);
@@ -66,3 +71,4 @@ app.use(notFoundHandler);
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
 });
+

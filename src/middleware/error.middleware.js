@@ -4,26 +4,23 @@ const {
 } = require("express-oauth2-jwt-bearer");
 
 const errorHandler = (error, request, response, next) => {
+  console.error("AUTH ERROR:", error);
+
   if (error instanceof InvalidTokenError) {
-    const message = "Bad credentials";
-
-    response.status(error.status).json({ message });
-
-    return;
+    return response.status(error.status).json({
+      message: error.message,
+    });
   }
 
   if (error instanceof UnauthorizedError) {
-    const message = "Requires authentication";
-
-    response.status(error.status).json({ message });
-
-    return;
+    return response.status(error.status).json({
+      message: error.message,
+    });
   }
 
-  const status = 500;
-  const message = "Internal Server Error";
-
-  response.status(status).json({ message });
+  response.status(500).json({
+    message: error.message,
+  });
 };
 
 module.exports = {
